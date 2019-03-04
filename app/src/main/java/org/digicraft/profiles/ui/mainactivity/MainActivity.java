@@ -3,7 +3,7 @@ package org.digicraft.profiles.ui.mainactivity;
 import android.os.Bundle;
 
 import org.digicraft.profiles.R;
-import org.digicraft.profiles.ui.profilelist.ProfileList;
+import org.digicraft.profiles.ui.profilelist.ProfileListFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction tran = fm.beginTransaction();
-            tran.replace(R.id.content, ProfileList.newInstance());
+            tran.replace(R.id.content, ProfileListFragment.newInstance());
             tran.commit();
         }
     }

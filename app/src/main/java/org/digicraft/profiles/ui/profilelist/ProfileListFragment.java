@@ -26,14 +26,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProfileList extends Fragment {
+public class ProfileListFragment extends Fragment {
 
     private ProfileListViewModel mViewModel;
     private RecyclerView mRwProfileList;
     private ProfileListAdapter mProfileListAdapter;
 
-    public static ProfileList newInstance() {
-        return new ProfileList();
+    public static ProfileListFragment newInstance() {
+        return new ProfileListFragment();
     }
 
     @Override
