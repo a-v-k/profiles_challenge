@@ -14,16 +14,23 @@ import com.google.android.material.snackbar.Snackbar;
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProfileList extends Fragment {
 
     private ProfileListViewModel mViewModel;
+    private RecyclerView mRwProfileList;
+    private ProfileListAdapter mProfileListAdapter;
 
     public static ProfileList newInstance() {
         return new ProfileList();
@@ -40,16 +47,23 @@ public class ProfileList extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_list_fragment, container, false);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
+        //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
+
+        mRwProfileList = view.findViewById(R.id.rw_person_list);
+        mRwProfileList.setHasFixedSize(true); // todo: check it
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRwProfileList.getContext(),
+                layoutManager.getOrientation());
+        mRwProfileList.addItemDecoration(dividerItemDecoration);
+        mRwProfileList.setLayoutManager(layoutManager);
+        mProfileListAdapter = new ProfileListAdapter(getContext(), new ArrayList<>());
+        mRwProfileList.setAdapter(mProfileListAdapter);
 
         return view;
 
@@ -60,8 +74,17 @@ public class ProfileList extends Fragment {
         super.onActivityCreated(savedInstanceState);
         //noinspection ConstantConditions
         mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
-        // TODO: Use the ViewModel
 
+        mViewModel.getProfileListLiveData().observe(this, personList -> {
+            if (personList != null) {
+                mProfileListAdapter.updateDataset(personList);
+                mProfileListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        if (mViewModel.getProfileListLiveData().getValue() == null) {
+            mViewModel.fillDummyData();
+        }
 
     }
 
