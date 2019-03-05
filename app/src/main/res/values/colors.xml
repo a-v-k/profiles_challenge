@@ -3,8 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorFragmentBackground">#FFFFFF</color>
     <color name="colorEmptyImgBackground">#DADADA</color>
     <color name="colorItemBackgroundWhite">#FFFFFF</color>
     <color name="colorItemBackgroundMale">#BBDEFB</color>
-    <color name="colorItemBackgroundFemale">#F8BBD0</color>
+    <color name="colorItemBackgroundFemale">#FFCDD2</color>
 </resources>

@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction tran = fm.beginTransaction();
-            tran.replace(R.id.content, ProfileListFragment.newInstance());
+            tran.add(R.id.content, ProfileListFragment.newInstance());
+            tran.disallowAddToBackStack();
             tran.commit();
         }
     }

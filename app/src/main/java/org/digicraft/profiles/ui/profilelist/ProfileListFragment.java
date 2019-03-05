@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
+import org.digicraft.profiles.ui.profileadd.ProfileAddFragment;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,8 +53,7 @@ public class ProfileListFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(view1 -> Snackbar.make(view1, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(view1 -> showAddPersonFragment());
 
         mRwProfileList = view.findViewById(R.id.rw_person_list);
         mRwProfileList.setHasFixedSize(true); // todo: check it
@@ -109,5 +110,14 @@ public class ProfileListFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void showAddPersonFragment() {
+        //noinspection ConstantConditions
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ProfileAddFragment fragment = ProfileAddFragment.newInstance();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.add(R.id.content, fragment, "fragment_add_person");
+        transaction.addToBackStack("fragment_add_person");
+        transaction.commit();
+    }
 
 }
