@@ -27,11 +27,11 @@ public class Person {
 
     private String hobbies;
 
-    public Person(Integer id, String gender, String name, Integer age, String image, String hobbies) {
+    public Person(Integer id, String name, Integer age, String gender, String image, String hobbies) {
         this.id = id;
-        this.gender = gender;
         this.name = name;
         this.age = age;
+        this.gender = gender;
         this.image = image;
         this.hobbies = hobbies;
     }

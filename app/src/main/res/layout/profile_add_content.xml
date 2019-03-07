@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/img_person"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/photo"
@@ -42,10 +42,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:text="@string/image"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView" />
+            app:layout_constraintBottom_toBottomOf="@+id/img_person"
+            app:layout_constraintEnd_toEndOf="@+id/img_person"
+            app:layout_constraintStart_toStartOf="@+id/img_person"
+            app:layout_constraintTop_toTopOf="@+id/img_person" />
 
 
         <EditText
