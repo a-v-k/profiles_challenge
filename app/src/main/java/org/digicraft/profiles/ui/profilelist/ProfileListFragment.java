@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.digicraft.profiles.R;
+import org.digicraft.profiles.data.model.Person;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 import org.digicraft.profiles.ui.profileadd.ProfileAddFragment;
+import org.digicraft.profiles.ui.profileview.ProfileViewFragment;
 
 import java.util.ArrayList;
 
@@ -28,11 +30,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ProfileListFragment extends Fragment {
+public class ProfileListFragment extends Fragment implements ProfileListAdapter.OnItemClickListener {
 
     private ProfileListViewModel mViewModel;
     private RecyclerView mRwProfileList;
     private ProfileListAdapter mProfileListAdapter;
+
+    // TODO: 3/7/19 correct icon on FAB
 
     public static ProfileListFragment newInstance() {
         return new ProfileListFragment();
@@ -63,7 +67,7 @@ public class ProfileListFragment extends Fragment {
                 layoutManager.getOrientation());
         mRwProfileList.addItemDecoration(dividerItemDecoration);
         mRwProfileList.setLayoutManager(layoutManager);
-        mProfileListAdapter = new ProfileListAdapter(getContext(), new ArrayList<>());
+        mProfileListAdapter = new ProfileListAdapter(getContext(), new ArrayList<>(), this);
         mRwProfileList.setAdapter(mProfileListAdapter);
 
         return view;
@@ -119,5 +123,23 @@ public class ProfileListFragment extends Fragment {
         transaction.addToBackStack("fragment_add_person");
         transaction.commit();
     }
+
+    @Override
+    public void onItemClick(Person person) {
+        if (person != null && person.getId() != null) {
+            showProfileViewFragment(person.getId());
+        }
+    }
+
+    private void showProfileViewFragment(Integer profileId) {
+        Fragment fragment = ProfileViewFragment.newInstance(profileId);
+        //noinspection ConstantConditions
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.add(R.id.content, fragment, "fragment_add_person");
+        transaction.addToBackStack("fragment_add_person");
+        transaction.commit();
+    }
+
 
 }

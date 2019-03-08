@@ -159,6 +159,7 @@ public class ProfileAddFragment extends Fragment {
     }
 
     private void showMessage(String message) {
+        // TODO: 3/7/19 make snackbar
         Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
     }
 

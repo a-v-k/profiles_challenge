@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -21,7 +22,8 @@ public class ProfileListViewModel extends ViewModel {
     private MutableLiveData<List<Person>> mProfileListLiveData = new MutableLiveData<>();
     private HandlerThread mWorkerHandlerThread = null;
     private Handler mWorkerHandler = null;
-    //private
+    private MutableLiveData<Integer> mPersonIdLiveData = new MutableLiveData<>();
+    private MediatorLiveData<Person> mSinglePersonLiveData = null;
 
     private Handler getWorkerHandler() {
         if (mWorkerHandler == null) {
@@ -45,7 +47,14 @@ public class ProfileListViewModel extends ViewModel {
                 /// save data here
 
                 List<Person> list = mProfileListLiveData.getValue();
-                list.add(person);
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+
+                // in the real app we should check id to choose to update or insert
+                if (list.indexOf(person) == -1) {
+                    list.add(person);
+                }
                 mProfileListLiveData.postValue(list);
                 result.postValue(Boolean.TRUE);
             } catch (Exception e) {
@@ -54,6 +63,35 @@ public class ProfileListViewModel extends ViewModel {
             }
         });
         return result;
+    }
+
+    public void setCurrentPersonId(Integer personId) {
+        mPersonIdLiveData.postValue(personId);
+    }
+
+    public MediatorLiveData<Person> getSinglePersonLiveData() {
+        if (mSinglePersonLiveData == null) {
+            mSinglePersonLiveData = new MediatorLiveData<>();
+            mSinglePersonLiveData.addSource(getProfileListLiveData(),
+                    personList -> updateSinglePersonLiveData(personList, mPersonIdLiveData.getValue()));
+            mSinglePersonLiveData.addSource(mPersonIdLiveData,
+                    personId -> updateSinglePersonLiveData(getProfileListLiveData().getValue(), personId));
+        }
+        return mSinglePersonLiveData;
+    }
+
+    private void updateSinglePersonLiveData(List<Person> personList, Integer personId) {
+        if (personId != null && personList != null) {
+            for (Person person : personList) {
+                if (personId.equals(person.getId())) {
+                    mSinglePersonLiveData.postValue(person);
+                    return;
+                }
+                mSinglePersonLiveData.postValue(null);
+            }
+        } else {
+            mSinglePersonLiveData.postValue(null);
+        }
     }
 
     // TODO: 3/3/19 remove it
@@ -74,4 +112,5 @@ public class ProfileListViewModel extends ViewModel {
         super.onCleared();
         mWorkerHandlerThread.quit();
     }
+
 }

@@ -24,12 +24,14 @@ import static org.digicraft.profiles.data.model.Person.GENDER_MALE;
 
 public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.ProfileViewHolder> {
     private List<Person> mDataset;
-    private Context mContext;
+    private final Context mContext;
+    private final OnItemClickListener mClickListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ProfileListAdapter(Context context, List<Person> dataset) {
+    ProfileListAdapter(Context context, List<Person> dataset, OnItemClickListener listener) {
         mDataset = dataset;
         mContext = context;
+        mClickListener = listener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -43,7 +45,6 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         return new ProfileViewHolder(v);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         Person person = mDataset.get(position);
@@ -51,6 +52,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         holder.tvName.setText(person.getName());
         holder.tvAge.setText(String.valueOf(person.getAge()));
         holder.tvHobbies.setText(person.getHobbies());
+        holder.person = person;
         // holder.imgPerson. /// todo: set image
         //holder.container.setBackgroundColor(mContext.getColor(R.color.colorItemBackgroundFemale));
         if (GENDER_MALE.equals(person.getGender())) {
@@ -62,7 +64,6 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataset.size();
@@ -72,11 +73,12 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         mDataset = dataset;
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    static class ProfileViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+    public interface OnItemClickListener {
+        void onItemClick(Person person);
+    }
+
+    class ProfileViewHolder extends RecyclerView.ViewHolder {
+        Person person = null;
         TextView tvId;
         TextView tvName;
         TextView tvAge;
@@ -92,6 +94,9 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             tvHobbies = v.findViewById(R.id.tvHobbies);
             imgPerson = v.findViewById(R.id.imgPerson);
             container = v.findViewById(R.id.item_container);
+            container.setClickable(true);
+            container.setFocusable(true);
+            container.setOnClickListener(vv -> mClickListener.onItemClick(person));
         }
     }
 
