@@ -46,6 +46,21 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        //noinspection ConstantConditions
+        mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
+
+        mViewModel.getProfileListLiveData().observe(this, personList -> {
+            if (personList != null) {
+                mProfileListAdapter.updateDataset(personList);
+                mProfileListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        if (mViewModel.getProfileListLiveData().getValue() == null) {
+            mViewModel.fillDummyData();
+        }
+
     }
 
     @Override
@@ -71,25 +86,6 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         mRwProfileList.setAdapter(mProfileListAdapter);
 
         return view;
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //noinspection ConstantConditions
-        mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
-
-        mViewModel.getProfileListLiveData().observe(this, personList -> {
-            if (personList != null) {
-                mProfileListAdapter.updateDataset(personList);
-                mProfileListAdapter.notifyDataSetChanged();
-            }
-        });
-
-        if (mViewModel.getProfileListLiveData().getValue() == null) {
-            mViewModel.fillDummyData();
-        }
 
     }
 

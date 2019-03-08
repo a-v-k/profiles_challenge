@@ -50,11 +50,6 @@ public class ProfileViewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if (getArguments() != null) {
             mPersonId = getArguments().getInt(ARG_PERSON_ID, Integer.MIN_VALUE);
@@ -62,9 +57,19 @@ public class ProfileViewFragment extends Fragment {
         if (mPersonId == null || mPersonId == Integer.MIN_VALUE) {
             throw new IllegalArgumentException("ARG_PERSON_ID should be defined");
         }
+        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
+        mViewModel.setCurrentPersonId(mPersonId);
+        mViewModel.getSinglePersonLiveData().observe(this, person -> {
+            mPerson = person;
+            fillProfile(person);
+        });
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.profile_view_fragment, container, false);
-
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -82,12 +87,6 @@ public class ProfileViewFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
-        mViewModel.setCurrentPersonId(mPersonId);
-        mViewModel.getSinglePersonLiveData().observe(this, person -> {
-            mPerson = person;
-            fillProfile(person);
-        });
     }
 
     @Override
