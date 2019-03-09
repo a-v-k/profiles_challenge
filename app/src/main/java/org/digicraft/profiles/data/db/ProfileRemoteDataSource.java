@@ -95,7 +95,7 @@ public class ProfileRemoteDataSource {
                     result.postValue(Boolean.TRUE);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(LOG_TAG, "Error adding document", e);
+                    Log.e(LOG_TAG, "Error while adding document", e);
                     result.postValue(Boolean.FALSE);
                 });
 
@@ -113,7 +113,7 @@ public class ProfileRemoteDataSource {
                 .set(person)
                 .addOnSuccessListener(documentReference -> result.postValue(Boolean.TRUE))
                 .addOnFailureListener(e -> {
-                    Log.e(LOG_TAG, "Error adding document", e);
+                    Log.e(LOG_TAG, "Error while updating document", e);
                     result.postValue(Boolean.FALSE);
                 });
 
@@ -127,4 +127,15 @@ public class ProfileRemoteDataSource {
 
     }
 
+    public LiveData<Boolean> deletePerson(String fbId) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(DB_PROFILES).document(fbId).delete()
+                .addOnSuccessListener(documentReference -> result.postValue(Boolean.TRUE))
+                .addOnFailureListener(e -> {
+                    Log.e(LOG_TAG, "Error while deleting the document", e);
+                    result.postValue(Boolean.FALSE);
+                });
+        return result;
+    }
 }

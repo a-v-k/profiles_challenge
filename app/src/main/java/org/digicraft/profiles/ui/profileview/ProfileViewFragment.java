@@ -2,6 +2,8 @@ package org.digicraft.profiles.ui.profileview;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +82,7 @@ public class ProfileViewFragment extends Fragment {
         mTxtHobbies = view.findViewById(R.id.txt_hobbies);
         mTxtGender = view.findViewById(R.id.txt_gender);
         mBtnSave = view.findViewById(R.id.btn_save); // todo: make the menu instead of button
-        mBtnSave.setOnClickListener(v -> onSavePressed());
+        mBtnSave.setOnClickListener(v -> saveProfile());
         return view;
     }
 
@@ -90,16 +92,25 @@ public class ProfileViewFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_profile_view, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.action_delete:
+                deleteProfile();
+                return true;
         }
 
         return (super.onOptionsItemSelected(item));
     }
-
 
     private void fillProfile(Person person) {
         // TODO: 3/7/19 show image
@@ -109,7 +120,7 @@ public class ProfileViewFragment extends Fragment {
         mTxtHobbies.setText(person.getHobbies());
     }
 
-    private void onSavePressed() {
+    private void saveProfile() {
         mPerson.setHobbies(mTxtHobbies.getText().toString());
         showLoading();
         mViewModel.savePerson(mPerson).observe(this, result -> {
@@ -123,6 +134,24 @@ public class ProfileViewFragment extends Fragment {
             }
         });
 
+    }
+
+    private void deleteProfile() {
+        // TODO: 3/9/19 show confirmation dialog
+        if (mPerson != null && mPerson.getFbId() != null && !mPerson.getFbId().isEmpty()) {
+            showLoading();
+            mViewModel.deletePerson(mPerson).observe(this, result -> {
+                if (result != null) {
+                    if (result) {
+                        hideLoading();
+                        onBackPressed();
+                    } else {
+                        hideLoading();
+                        showMessage("Error while deleting profile");
+                    }
+                }
+            });
+        }
     }
 
     private void showLoading() {

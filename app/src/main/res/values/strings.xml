@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Profiles</string>
     <string name="action_settings">Settings</string>
+    <string name="action_delete">Delete</string>
     <string name="photo">Photo</string>
     <string name="name">Name</string>
     <string name="age">Age</string>

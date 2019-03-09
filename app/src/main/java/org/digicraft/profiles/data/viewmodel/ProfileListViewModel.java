@@ -91,6 +91,14 @@ public class ProfileListViewModel extends ViewModel {
         }
     }
 
+    public LiveData<Boolean> deletePerson(Person person) {
+        if (person != null && person.getFbId() != null && !person.getFbId().isEmpty()) {
+            return getProfileRemoteDataSource().deletePerson(person.getFbId());
+        } else {
+            throw new IllegalArgumentException("Incorrect person id");
+        }
+    }
+
     public void setCurrentPersonId(Integer personId) {
         mPersonIdLiveData.postValue(personId);
     }
