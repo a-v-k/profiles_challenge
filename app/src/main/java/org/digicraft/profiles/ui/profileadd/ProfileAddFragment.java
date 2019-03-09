@@ -1,6 +1,9 @@
 package org.digicraft.profiles.ui.profileadd;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,11 +12,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
+import org.digicraft.profiles.util.Const;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,12 +29,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by Andrey Koryazhkin on 05-03-2019.
  */
 public class ProfileAddFragment extends Fragment {
 
-
+    private static final String LOG_TAG = Const.LOG_APP + "ProfileAddFr";
+    private static final int PICK_IMAGE_CODE = 22;
     private ImageView mImgPerson;
     private EditText mTxtName;
     private ProfileListViewModel mViewModel;
@@ -36,6 +46,7 @@ public class ProfileAddFragment extends Fragment {
     private RadioButton mRbMale;
     private RadioButton mRbFemale;
     private Button mBtnSave;
+    private TextView mTvImage;
 
     public static ProfileAddFragment newInstance() {
         Bundle args = new Bundle();
@@ -62,13 +73,15 @@ public class ProfileAddFragment extends Fragment {
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mImgPerson = view.findViewById(R.id.img_person);
+        mTvImage = view.findViewById(R.id.tv_image_hint);
         mTxtName = view.findViewById(R.id.txt_name);
         mTxtAge = view.findViewById(R.id.txt_age);
         mTxtHobbies = view.findViewById(R.id.txt_hobbies);
         mRbMale = view.findViewById(R.id.rb_male);
         mRbFemale = view.findViewById(R.id.rb_female);
         mBtnSave = view.findViewById(R.id.btn_save); // todo: make the menu instead of button
-        mBtnSave.setOnClickListener(v -> onSavePressed());
+        mBtnSave.setOnClickListener(this::onSavePressed);
+        mImgPerson.setOnClickListener(this::onImageClicked);
         return view;
     }
 
@@ -100,7 +113,33 @@ public class ProfileAddFragment extends Fragment {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
-    private void onSavePressed() {
+    private void onImageClicked(View view) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == PICK_IMAGE_CODE && resultCode == RESULT_OK) {
+            if (resultData != null) {
+                // this is the image selected by the user
+                Uri imageUri = resultData.getData();
+                Log.d(LOG_TAG, String.valueOf(imageUri));
+                if (imageUri != null) {
+                    showImage(imageUri);
+                }
+            }
+        }
+    }
+
+    private void showImage(Uri imageUri) {
+        Glide.with(this).load(imageUri).centerCrop().into(mImgPerson);
+        mTvImage.setVisibility(View.GONE);
+    }
+
+    private void onSavePressed(View view) {
         if (checkFilled()) {
             String gender = mRbMale.isChecked() ? Profile.GENDER_MALE : Profile.GENDER_FEMALE;
             Integer age = Integer.valueOf(mTxtAge.getText().toString().trim());
