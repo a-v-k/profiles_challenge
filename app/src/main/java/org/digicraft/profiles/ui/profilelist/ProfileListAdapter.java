@@ -88,11 +88,11 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
 
         ProfileViewHolder(View v) {
             super(v);
-            tvId = v.findViewById(R.id.tvId);
-            tvName = v.findViewById(R.id.tvName);
-            tvAge = v.findViewById(R.id.tvAge);
-            tvHobbies = v.findViewById(R.id.tvHobbies);
-            imgPerson = v.findViewById(R.id.imgPerson);
+            tvId = v.findViewById(R.id.tv_id);
+            tvName = v.findViewById(R.id.tv_name);
+            tvAge = v.findViewById(R.id.tv_age);
+            tvHobbies = v.findViewById(R.id.tv_hobbies);
+            imgPerson = v.findViewById(R.id.img_person);
             container = v.findViewById(R.id.item_container);
             container.setClickable(true);
             container.setFocusable(true);

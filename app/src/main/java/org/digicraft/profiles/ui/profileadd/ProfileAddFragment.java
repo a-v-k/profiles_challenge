@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProviders;
 public class ProfileAddFragment extends Fragment {
 
 
+    private ImageView mImgPerson;
     private EditText mTxtName;
     private ProfileListViewModel mViewModel;
     private EditText mTxtAge;
@@ -59,6 +61,7 @@ public class ProfileAddFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mImgPerson = view.findViewById(R.id.img_person);
         mTxtName = view.findViewById(R.id.txt_name);
         mTxtAge = view.findViewById(R.id.txt_age);
         mTxtHobbies = view.findViewById(R.id.txt_hobbies);
