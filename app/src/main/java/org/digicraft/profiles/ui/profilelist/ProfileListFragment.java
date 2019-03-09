@@ -57,10 +57,7 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
             }
         });
 
-        if (mViewModel.getProfileListLiveData().getValue() == null) {
-            mViewModel.fillDummyData();
-        }
-
+        mViewModel.refreshProfileList();
     }
 
     @Override
