@@ -8,27 +8,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.digicraft.profiles.R;
-import org.digicraft.profiles.data.model.Person;
+import org.digicraft.profiles.data.model.Profile;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static org.digicraft.profiles.data.model.Person.GENDER_FEMALE;
-import static org.digicraft.profiles.data.model.Person.GENDER_MALE;
+import static org.digicraft.profiles.data.model.Profile.GENDER_FEMALE;
+import static org.digicraft.profiles.data.model.Profile.GENDER_MALE;
 
 /**
  * Created by Andrey Koryazhkin on 03-03-2019.
  */
 
 public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.ProfileViewHolder> {
-    private List<Person> mDataset;
+    private List<Profile> mDataset;
     private final Context mContext;
     private final OnItemClickListener mClickListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    ProfileListAdapter(Context context, List<Person> dataset, OnItemClickListener listener) {
+    ProfileListAdapter(Context context, List<Profile> dataset, OnItemClickListener listener) {
         mDataset = dataset;
         mContext = context;
         mClickListener = listener;
@@ -47,17 +47,17 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
-        Person person = mDataset.get(position);
-        holder.tvId.setText(String.valueOf(person.getId()));
-        holder.tvName.setText(person.getName());
-        holder.tvAge.setText(String.valueOf(person.getAge()));
-        holder.tvHobbies.setText(person.getHobbies());
-        holder.person = person;
+        Profile profile = mDataset.get(position);
+        holder.tvId.setText(String.valueOf(profile.getId()));
+        holder.tvName.setText(profile.getName());
+        holder.tvAge.setText(String.valueOf(profile.getAge()));
+        holder.tvHobbies.setText(profile.getHobbies());
+        holder.mProfile = profile;
         // holder.imgPerson. /// todo: set image
         //holder.container.setBackgroundColor(mContext.getColor(R.color.colorItemBackgroundFemale));
-        if (GENDER_MALE.equals(person.getGender())) {
+        if (GENDER_MALE.equals(profile.getGender())) {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.colorItemBackgroundMale));
-        } else if (GENDER_FEMALE.equals(person.getGender())) {
+        } else if (GENDER_FEMALE.equals(profile.getGender())) {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.colorItemBackgroundFemale));
         } else {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.colorItemBackgroundWhite));
@@ -69,16 +69,16 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         return mDataset.size();
     }
 
-    void updateDataset(List<Person> dataset) {
+    void updateDataset(List<Profile> dataset) {
         mDataset = dataset;
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Person person);
+        void onItemClick(Profile profile);
     }
 
     class ProfileViewHolder extends RecyclerView.ViewHolder {
-        Person person = null;
+        Profile mProfile = null;
         TextView tvId;
         TextView tvName;
         TextView tvAge;
@@ -96,7 +96,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             container = v.findViewById(R.id.item_container);
             container.setClickable(true);
             container.setFocusable(true);
-            container.setOnClickListener(vv -> mClickListener.onItemClick(person));
+            container.setOnClickListener(vv -> mClickListener.onItemClick(mProfile));
         }
     }
 

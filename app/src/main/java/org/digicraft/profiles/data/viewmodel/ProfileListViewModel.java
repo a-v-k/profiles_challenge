@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import org.digicraft.profiles.data.db.ProfileRemoteDataSource;
-import org.digicraft.profiles.data.model.Person;
+import org.digicraft.profiles.data.model.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +19,13 @@ import static org.digicraft.profiles.util.Const.LOG_APP;
 public class ProfileListViewModel extends ViewModel {
 
     private static final String LOG_TAG = LOG_APP + "ProfileListVM";
-    private MediatorLiveData<List<Person>> mProfileListLiveData = new MediatorLiveData<>();
-    private LiveData<List<Person>> mProfileListSourceLiveData = null;
+    private MediatorLiveData<List<Profile>> mProfileListLiveData = new MediatorLiveData<>();
+    private LiveData<List<Profile>> mProfileListSourceLiveData = null;
     private HandlerThread mWorkerHandlerThread = null;
     private Handler mWorkerHandler = null;
-    private MutableLiveData<Integer> mPersonIdLiveData = new MutableLiveData<>();
-    private MediatorLiveData<Person> mSinglePersonLiveData = null;
-    private LiveData<Person> mSinglePersonSourceLiveData = null;
+    private MutableLiveData<Integer> mProfileIdLiveData = new MutableLiveData<>();
+    private MediatorLiveData<Profile> mSingleProfileLiveData = null;
+    private LiveData<Profile> mSingleProfileSourceLiveData = null;
     private ProfileRemoteDataSource mProfileRemoteDataSource;
 
     private Handler getWorkerHandler() {
@@ -45,7 +45,7 @@ public class ProfileListViewModel extends ViewModel {
         return mProfileRemoteDataSource;
     }
 
-    public LiveData<List<Person>> getProfileListLiveData() {
+    public LiveData<List<Profile>> getProfileListLiveData() {
         return mProfileListLiveData;
     }
 
@@ -55,73 +55,46 @@ public class ProfileListViewModel extends ViewModel {
             mProfileListSourceLiveData = null;
         }
         mProfileListSourceLiveData = getProfileRemoteDataSource().getData();
-        mProfileListLiveData.addSource(mProfileListSourceLiveData, personList -> mProfileListLiveData.postValue(personList));
+        mProfileListLiveData.addSource(mProfileListSourceLiveData, profileList -> mProfileListLiveData.postValue(profileList));
     }
 
-//    public LiveData<Boolean> savePerson(final Person person) {
-//        final MutableLiveData<Boolean> result = new MutableLiveData<>();
-//        getWorkerHandler().post(() -> {
-//            try {
-//                /// save data here
-//
-//                List<Person> list = mProfileListLiveData.getValue();
-//                if (list == null) {
-//                    list = new ArrayList<>();
-//                }
-//
-//                // in the real app we should check id to choose to update or insert
-//                if (list.indexOf(person) == -1) {
-//                    list.add(person);
-//                }
-//                mProfileListLiveData.postValue(list);
-//                result.postValue(Boolean.TRUE);
-//            } catch (Exception e) {
-//                Log.e(LOG_TAG, e.getMessage(), e);
-//                result.postValue(Boolean.FALSE);
-//            }
-//        });
-//        return result;
-//    }
-
-    public LiveData<Boolean> savePerson(final Person person) {
-        if (person.getFbId() == null || person.getFbId().isEmpty()) {
-            return getProfileRemoteDataSource().insertPerson(person);
+    public LiveData<Boolean> saveProfile(final Profile profile) {
+        if (profile.getFbId() == null || profile.getFbId().isEmpty()) {
+            return getProfileRemoteDataSource().insertProfile(profile);
         } else {
-            return getProfileRemoteDataSource().updatePerson(person);
+            return getProfileRemoteDataSource().updateProfile(profile);
         }
     }
 
-    public LiveData<Boolean> deletePerson(Person person) {
-        if (person != null && person.getFbId() != null && !person.getFbId().isEmpty()) {
-            return getProfileRemoteDataSource().deletePerson(person.getFbId());
+    public LiveData<Boolean> deleteProfile(Profile profile) {
+        if (profile != null && profile.getFbId() != null && !profile.getFbId().isEmpty()) {
+            return getProfileRemoteDataSource().deleteProfile(profile.getFbId());
         } else {
-            throw new IllegalArgumentException("Incorrect person id");
+            throw new IllegalArgumentException("Incorrect profile id");
         }
     }
 
-    public void setCurrentPersonId(Integer personId) {
-        mPersonIdLiveData.postValue(personId);
+    public void setCurrentProfileId(Integer profileId) {
+        mProfileIdLiveData.postValue(profileId);
     }
 
-    public MediatorLiveData<Person> getSinglePersonLiveData() {
-        if (mSinglePersonLiveData == null) {
-            mSinglePersonLiveData = new MediatorLiveData<>();
-//            mSinglePersonLiveData.addSource(getProfileListLiveData(),
-//                    personList -> updateSinglePersonLiveData(personList, mPersonIdLiveData.getValue()));
-            mSinglePersonLiveData.addSource(mPersonIdLiveData,
-                    this::replaceSinglePersonLiveData);
+    public MediatorLiveData<Profile> getSingleProfileLiveData() {
+        if (mSingleProfileLiveData == null) {
+            mSingleProfileLiveData = new MediatorLiveData<>();
+            mSingleProfileLiveData.addSource(mProfileIdLiveData,
+                    this::replaceSingleProfileLiveData);
         }
-        return mSinglePersonLiveData;
+        return mSingleProfileLiveData;
     }
 
-    private void replaceSinglePersonLiveData(Integer personId) {
-        if (mSinglePersonSourceLiveData != null) {
-            mSinglePersonLiveData.removeSource(mSinglePersonSourceLiveData);
-            mSinglePersonSourceLiveData = null;
+    private void replaceSingleProfileLiveData(Integer profileId) {
+        if (mSingleProfileSourceLiveData != null) {
+            mSingleProfileLiveData.removeSource(mSingleProfileSourceLiveData);
+            mSingleProfileSourceLiveData = null;
         }
-        if (personId != null) {
-            mSinglePersonSourceLiveData = getProfileRemoteDataSource().getPerson(personId);
-            mSinglePersonLiveData.addSource(mSinglePersonSourceLiveData, person -> mSinglePersonLiveData.postValue(person));
+        if (profileId != null) {
+            mSingleProfileSourceLiveData = getProfileRemoteDataSource().getProfile(profileId);
+            mSingleProfileLiveData.addSource(mSingleProfileSourceLiveData, profile -> mSingleProfileLiveData.postValue(profile));
         }
     }
 
@@ -129,11 +102,11 @@ public class ProfileListViewModel extends ViewModel {
 
     public void fillDummyData() {
 
-        List<Person> list = new ArrayList<>();
-        list.add(new Person(
-                2343, "John Smith", 38, Person.GENDER_MALE, null, "Golf, Fishing"));
-        list.add(new Person(
-                34343, "Hanna Johnson", 32, Person.GENDER_FEMALE, null, "Jogging"));
+        List<Profile> list = new ArrayList<>();
+        list.add(new Profile(
+                2343, "John Smith", 38, Profile.GENDER_MALE, null, "Golf, Fishing"));
+        list.add(new Profile(
+                34343, "Hanna Johnson", 32, Profile.GENDER_FEMALE, null, "Jogging"));
 
         mProfileListLiveData.postValue(list);
     }

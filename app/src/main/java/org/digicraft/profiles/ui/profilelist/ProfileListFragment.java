@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.digicraft.profiles.R;
-import org.digicraft.profiles.data.model.Person;
+import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 import org.digicraft.profiles.ui.profileadd.ProfileAddFragment;
 import org.digicraft.profiles.ui.profileview.ProfileViewFragment;
@@ -50,9 +50,9 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         //noinspection ConstantConditions
         mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
 
-        mViewModel.getProfileListLiveData().observe(this, personList -> {
-            if (personList != null) {
-                mProfileListAdapter.updateDataset(personList);
+        mViewModel.getProfileListLiveData().observe(this, profileList -> {
+            if (profileList != null) {
+                mProfileListAdapter.updateDataset(profileList);
                 mProfileListAdapter.notifyDataSetChanged();
             }
         });
@@ -69,9 +69,9 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(view1 -> showAddPersonFragment());
+        fab.setOnClickListener(view1 -> showProfileAddFragment());
 
-        mRwProfileList = view.findViewById(R.id.rw_person_list);
+        mRwProfileList = view.findViewById(R.id.rw_profile_list);
         mRwProfileList.setHasFixedSize(true); // todo: check it
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -104,20 +104,20 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         return super.onOptionsItemSelected(item);
     }
 
-    private void showAddPersonFragment() {
+    private void showProfileAddFragment() {
         //noinspection ConstantConditions
         FragmentManager fm = getActivity().getSupportFragmentManager();
         ProfileAddFragment fragment = ProfileAddFragment.newInstance();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.content, fragment, "fragment_add_person");
-        transaction.addToBackStack("fragment_add_person");
+        transaction.add(R.id.content, fragment, "fragment_add_profile");
+        transaction.addToBackStack("fragment_add_profile");
         transaction.commit();
     }
 
     @Override
-    public void onItemClick(Person person) {
-        if (person != null && person.getId() != null) {
-            showProfileViewFragment(person.getId());
+    public void onItemClick(Profile profile) {
+        if (profile != null && profile.getId() != null) {
+            showProfileViewFragment(profile.getId());
         }
     }
 
@@ -126,8 +126,8 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         //noinspection ConstantConditions
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.content, fragment, "fragment_add_person");
-        transaction.addToBackStack("fragment_add_person");
+        transaction.add(R.id.content, fragment, "fragment_add_profile");
+        transaction.addToBackStack("fragment_add_profile");
         transaction.commit();
     }
 

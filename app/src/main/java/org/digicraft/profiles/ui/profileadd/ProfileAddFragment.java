@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.digicraft.profiles.R;
-import org.digicraft.profiles.data.model.Person;
+import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 
 import androidx.annotation.NonNull;
@@ -99,16 +99,16 @@ public class ProfileAddFragment extends Fragment {
 
     private void onSavePressed() {
         if (checkFilled()) {
-            String gender = mRbMale.isChecked() ? Person.GENDER_MALE : Person.GENDER_FEMALE;
+            String gender = mRbMale.isChecked() ? Profile.GENDER_MALE : Profile.GENDER_FEMALE;
             Integer age = Integer.valueOf(mTxtAge.getText().toString().trim());
 
-            Person person = new Person(null,
+            Profile profile = new Profile(null,
                     mTxtName.getText().toString().trim(),
                     age, gender, null,
                     mTxtHobbies.getText().toString().trim()
             );
             showLoading();
-            mViewModel.savePerson(person).observe(this, result -> {
+            mViewModel.saveProfile(profile).observe(this, result -> {
                 if (result != null) {
                     hideLoading();
                     if (result) {

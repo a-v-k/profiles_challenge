@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digicraft.profiles.R;
-import org.digicraft.profiles.data.model.Person;
+import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 
 import java.util.Objects;
@@ -30,9 +30,9 @@ import androidx.lifecycle.ViewModelProviders;
  */
 public class ProfileViewFragment extends Fragment {
 
-    private static final String ARG_PERSON_ID = "arg_person_id";
-    private Integer mPersonId = null;
-    private Person mPerson = null;
+    private static final String ARG_PROFILE_ID = "arg_profile_id";
+    private Integer mProfileId = null;
+    private Profile mProfile = null;
     private ProfileListViewModel mViewModel;
     private TextView mTxtName;
     private TextView mTxtAge;
@@ -40,10 +40,10 @@ public class ProfileViewFragment extends Fragment {
     private TextView mTxtGender;
     private Button mBtnSave;
 
-    public static ProfileViewFragment newInstance(Integer personId) {
+    public static ProfileViewFragment newInstance(Integer profileId) {
         ProfileViewFragment profileViewFragment = new ProfileViewFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PERSON_ID, personId);
+        args.putInt(ARG_PROFILE_ID, profileId);
         profileViewFragment.setArguments(args);
         return profileViewFragment;
     }
@@ -54,16 +54,16 @@ public class ProfileViewFragment extends Fragment {
         setHasOptionsMenu(true);
 
         if (getArguments() != null) {
-            mPersonId = getArguments().getInt(ARG_PERSON_ID, Integer.MIN_VALUE);
+            mProfileId = getArguments().getInt(ARG_PROFILE_ID, Integer.MIN_VALUE);
         }
-        if (mPersonId == null || mPersonId == Integer.MIN_VALUE) {
-            throw new IllegalArgumentException("ARG_PERSON_ID should be defined");
+        if (mProfileId == null || mProfileId == Integer.MIN_VALUE) {
+            throw new IllegalArgumentException("ARG_PROFILE_ID should be defined");
         }
         mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
-        mViewModel.setCurrentPersonId(mPersonId);
-        mViewModel.getSinglePersonLiveData().observe(this, person -> {
-            mPerson = person;
-            fillProfile(person);
+        mViewModel.setCurrentProfileId(mProfileId);
+        mViewModel.getSingleProfileLiveData().observe(this, profile -> {
+            mProfile = profile;
+            fillProfile(profile);
         });
     }
 
@@ -112,18 +112,18 @@ public class ProfileViewFragment extends Fragment {
         return (super.onOptionsItemSelected(item));
     }
 
-    private void fillProfile(Person person) {
+    private void fillProfile(Profile profile) {
         // TODO: 3/7/19 show image
-        mTxtName.setText(person.getName());
-        mTxtAge.setText(String.valueOf(person.getAge()));
-        mTxtGender.setText(person.getGender());
-        mTxtHobbies.setText(person.getHobbies());
+        mTxtName.setText(profile.getName());
+        mTxtAge.setText(String.valueOf(profile.getAge()));
+        mTxtGender.setText(profile.getGender());
+        mTxtHobbies.setText(profile.getHobbies());
     }
 
     private void saveProfile() {
-        mPerson.setHobbies(mTxtHobbies.getText().toString());
+        mProfile.setHobbies(mTxtHobbies.getText().toString());
         showLoading();
-        mViewModel.savePerson(mPerson).observe(this, result -> {
+        mViewModel.saveProfile(mProfile).observe(this, result -> {
             if (result != null) {
                 hideLoading();
                 if (result) {
@@ -138,9 +138,9 @@ public class ProfileViewFragment extends Fragment {
 
     private void deleteProfile() {
         // TODO: 3/9/19 show confirmation dialog
-        if (mPerson != null && mPerson.getFbId() != null && !mPerson.getFbId().isEmpty()) {
+        if (mProfile != null && mProfile.getFbId() != null && !mProfile.getFbId().isEmpty()) {
             showLoading();
-            mViewModel.deletePerson(mPerson).observe(this, result -> {
+            mViewModel.deleteProfile(mProfile).observe(this, result -> {
                 if (result != null) {
                     if (result) {
                         hideLoading();
