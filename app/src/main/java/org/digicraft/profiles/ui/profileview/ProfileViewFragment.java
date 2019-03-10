@@ -40,6 +40,7 @@ public class ProfileViewFragment extends BaseFragment {
     private TextView mTxtAge;
     private EditText mTxtHobbies;
     private TextView mTxtGender;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button mBtnSave;
     private ImageView mImgPerson;
     private TextView mTvImage;

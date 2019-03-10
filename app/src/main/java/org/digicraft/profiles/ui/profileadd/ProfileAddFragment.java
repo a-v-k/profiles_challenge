@@ -24,6 +24,8 @@ import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
 import org.digicraft.profiles.ui.base.BaseFragment;
 import org.digicraft.profiles.util.Const;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +49,7 @@ public class ProfileAddFragment extends BaseFragment {
     private EditText mTxtHobbies;
     private RadioButton mRbMale;
     private RadioButton mRbFemale;
+    @SuppressWarnings("FieldCanBeLocal")
     private Button mBtnSave;
     private TextView mTvImage;
 
@@ -102,7 +105,7 @@ public class ProfileAddFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
+        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
     }
 
     @Override
@@ -121,7 +124,7 @@ public class ProfileAddFragment extends BaseFragment {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
-    private void onImageClicked(View view) {
+    private void onImageClicked(@SuppressWarnings("unused") View view) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -165,7 +168,7 @@ public class ProfileAddFragment extends BaseFragment {
         mTvImage.setVisibility(View.GONE);
     }
 
-    private void onSavePressed(View view) {
+    private void onSavePressed(@SuppressWarnings("unused") View view) {
         if (checkFilled()) {
             String gender = mRbMale.isChecked() ? Profile.GENDER_MALE : Profile.GENDER_FEMALE;
             Integer age = Integer.valueOf(mTxtAge.getText().toString().trim());
