@@ -7,6 +7,6 @@
     <color name="colorFragmentBackground">#FFFFFF</color>
     <color name="colorEmptyImgBackground">#DADADA</color>
     <color name="colorItemBackgroundWhite">#FFFFFF</color>
-    <color name="colorItemBackgroundMale">#BBDEFB</color>
-    <color name="colorItemBackgroundFemale">#FFCDD2</color>
+    <color name="colorItemBackgroundMale">#E0EEFB</color>
+    <color name="colorItemBackgroundFemale">#FFE1E4</color>
 </resources>
