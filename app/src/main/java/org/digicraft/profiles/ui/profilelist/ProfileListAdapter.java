@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.model.Profile;
 
@@ -62,6 +64,13 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         } else {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.colorItemBackgroundWhite));
         }
+        if (profile.getImage() != null && !profile.getImage().isEmpty()) {
+            Glide.with(mContext).load(profile.getImage()).centerCrop().into(holder.imgPerson);
+        } else {
+            //Glide.with(mContext).load(null).into(holder.imgPerson);
+            holder.imgPerson.setImageDrawable(null);
+        }
+
     }
 
     @Override
