@@ -97,12 +97,29 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        // TODO: 3/10/19 make icons for filter and sort
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_filter) {
+            showFilterDialog();
+            return true;
+        } else if (id == R.id.action_sort) {
+            showSortDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showFilterDialog() {
+        new FilterDialogBuilder().build(getContext(), mViewModel.getFilterType(),
+                (dialog, filterType) -> mViewModel.setFilterType(filterType)).show();
+    }
+
+    private void showSortDialog() {
+        new SortDialogBuilder().build(getContext(), mViewModel.getSortType(),
+                (dialog, sortType) -> mViewModel.setSortType(sortType)).show();
     }
 
     private void showProfileAddFragment() {

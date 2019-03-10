@@ -8,4 +8,20 @@
         android:visible="false"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_filter"
+        android:orderInCategory="200"
+        android:title="@string/action_filter"
+        android:visible="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:orderInCategory="300"
+        android:title="@string/action_sort"
+        android:visible="true"
+        app:showAsAction="never" />
+
+
 </menu>

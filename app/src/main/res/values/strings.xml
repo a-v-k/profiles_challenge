@@ -12,4 +12,15 @@
     <string name="save">Save</string>
     <string name="image">Image</string>
     <string name="update">update</string>
+    <string name="all">All</string>
+    <string name="filter_title">Filter</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="action_filter">Filter</string>
+    <string name="action_sort">Sort</string>
+    <string name="sort_name_asc"><![CDATA[Name (A->Z)]]></string>
+    <string name="sort_name_desc"><![CDATA[Name (Z->A)]]></string>
+    <string name="sort_age_asc"><![CDATA[Age (0->9)]]></string>
+    <string name="sort_age_desc"><![CDATA[Age (9->0)]]></string>
+    <string name="sort_none">None</string>
 </resources>

@@ -6,7 +6,9 @@ import android.os.HandlerThread;
 
 import org.digicraft.profiles.data.db.ImageRemoteDataSource;
 import org.digicraft.profiles.data.db.ProfileRemoteDataSource;
+import org.digicraft.profiles.data.model.FilterType;
 import org.digicraft.profiles.data.model.Profile;
+import org.digicraft.profiles.data.model.SortType;
 import org.digicraft.profiles.util.DataResponse;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class ProfileListViewModel extends ViewModel {
     private MediatorLiveData<Profile> mSingleProfileLiveData = null;
     private LiveData<Profile> mSingleProfileSourceLiveData = null;
     private ProfileRemoteDataSource mProfileRemoteDataSource;
+    private int mFilterType = FilterType.getDefault();
+    private int mSortType = SortType.getDefault();
 
     private Handler getWorkerHandler() {
         if (mWorkerHandler == null) {
@@ -63,8 +67,8 @@ public class ProfileListViewModel extends ViewModel {
     }
 
     public LiveData<DataResponse<Uri>> uploadImage(Uri localUri) {
-        ImageRemoteDataSource irds = new ImageRemoteDataSource();
-        return irds.saveNewImage(localUri);
+        ImageRemoteDataSource ds = new ImageRemoteDataSource();
+        return ds.saveNewImage(localUri);
     }
 
     public LiveData<Boolean> insertProfile(final Profile profile) {
@@ -130,4 +134,21 @@ public class ProfileListViewModel extends ViewModel {
         mWorkerHandlerThread.quit();
     }
 
+    public int getFilterType() {
+        return mFilterType;
+    }
+
+    public void setFilterType(int filterType) {
+        mFilterType = filterType;
+        // TODO: 3/10/19 refresh list
+    }
+
+    public int getSortType() {
+        return mSortType;
+    }
+
+    public void setSortType(int sortType) {
+        mSortType = sortType;
+        // TODO: 3/10/19 refresh list
+    }
 }
