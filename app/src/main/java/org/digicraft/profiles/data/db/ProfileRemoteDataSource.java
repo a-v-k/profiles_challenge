@@ -2,11 +2,14 @@ package org.digicraft.profiles.data.db;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import org.digicraft.profiles.data.model.FilterType;
 import org.digicraft.profiles.data.model.Profile;
+import org.digicraft.profiles.data.model.SortType;
 import org.digicraft.profiles.util.Const;
 
 import java.util.ArrayList;
@@ -25,10 +28,10 @@ public class ProfileRemoteDataSource {
     private static final String LOG_TAG = Const.LOG_APP + "ProfileRemoteDS";
     private static final String DB_PROFILES = "ps_profiles";
 
-    public MediatorLiveData<List<Profile>> getData() {
+    public MediatorLiveData<List<Profile>> getData(int filterType, int sortType) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query query = db.collection(DB_PROFILES);
+        Query query = makeConditions(db.collection(DB_PROFILES), filterType, sortType);
 
         MediatorLiveData<List<Profile>> result = new MediatorLiveData<>();
         result.addSource(new FirebaseQueryLiveData(query), documentSnapshots -> {
@@ -48,6 +51,43 @@ public class ProfileRemoteDataSource {
         });
         return result;
 
+    }
+
+    private Query makeConditions(CollectionReference collection, int filterType, int sortType) {
+        Query query = collection;
+        switch (filterType) {
+            case FilterType.FILTER_MALE: {
+                query = query.whereEqualTo(Profile.F_GENDER, Profile.GENDER_MALE);
+                break;
+            }
+            case FilterType.FILTER_FEMALE: {
+                query = query.whereEqualTo(Profile.F_GENDER, Profile.GENDER_FEMALE);
+                break;
+            }
+        }
+        switch (sortType) {
+            case SortType.SORT_AGE_ASC: {
+                query = query.orderBy(Profile.F_AGE, Query.Direction.ASCENDING);
+                break;
+            }
+            case SortType.SORT_AGE_DESC: {
+                query = query.orderBy(Profile.F_AGE, Query.Direction.DESCENDING);
+                break;
+            }
+            case SortType.SORT_NAME_ASC: {
+                query = query.orderBy(Profile.F_NAME, Query.Direction.ASCENDING);
+                break;
+            }
+            case SortType.SORT_NAME_DESC: {
+                query = query.orderBy(Profile.F_NAME, Query.Direction.DESCENDING);
+                break;
+            }
+            default: {
+                query = query.orderBy(Profile.F_ID, Query.Direction.ASCENDING);
+                break;
+            }
+        }
+        return query;
     }
 
     public LiveData<Profile> getProfile(Integer profileId) {

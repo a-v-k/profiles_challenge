@@ -62,7 +62,7 @@ public class ProfileListViewModel extends ViewModel {
             mProfileListLiveData.removeSource(mProfileListSourceLiveData);
             mProfileListSourceLiveData = null;
         }
-        mProfileListSourceLiveData = getProfileRemoteDataSource().getData();
+        mProfileListSourceLiveData = getProfileRemoteDataSource().getData(mFilterType, mSortType);
         mProfileListLiveData.addSource(mProfileListSourceLiveData, profileList -> mProfileListLiveData.postValue(profileList));
     }
 
@@ -139,8 +139,10 @@ public class ProfileListViewModel extends ViewModel {
     }
 
     public void setFilterType(int filterType) {
-        mFilterType = filterType;
-        // TODO: 3/10/19 refresh list
+        if (mFilterType != filterType) {
+            mFilterType = filterType;
+            refreshProfileList();
+        }
     }
 
     public int getSortType() {
@@ -148,7 +150,9 @@ public class ProfileListViewModel extends ViewModel {
     }
 
     public void setSortType(int sortType) {
-        mSortType = sortType;
-        // TODO: 3/10/19 refresh list
+        if (mSortType != sortType) {
+            mSortType = sortType;
+            refreshProfileList();
+        }
     }
 }
