@@ -11,17 +11,19 @@
 
     <item
         android:id="@+id/action_filter"
+        android:icon="@drawable/ic_baseline_filter_list_24px"
         android:orderInCategory="200"
         android:title="@string/action_filter"
         android:visible="true"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_sort"
+        android:icon="@drawable/ic_baseline_sort_24px"
         android:orderInCategory="300"
         android:title="@string/action_sort"
         android:visible="true"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 
 </menu>
