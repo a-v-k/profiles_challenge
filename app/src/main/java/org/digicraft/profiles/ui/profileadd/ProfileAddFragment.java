@@ -13,20 +13,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
+import org.digicraft.profiles.ui.base.BaseFragment;
 import org.digicraft.profiles.util.Const;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import static android.app.Activity.RESULT_OK;
@@ -34,11 +33,12 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Andrey Koryazhkin on 05-03-2019.
  */
-public class ProfileAddFragment extends Fragment {
+public class ProfileAddFragment extends BaseFragment {
 
     private static final String LOG_TAG = Const.LOG_APP + "ProfileAddFr";
     private static final int PICK_IMAGE_CODE = 22;
     private ImageView mImgPerson;
+    private Uri mImageUri = null;
     private EditText mTxtName;
     private ProfileListViewModel mViewModel;
     private EditText mTxtAge;
@@ -128,14 +128,32 @@ public class ProfileAddFragment extends Fragment {
                 Uri imageUri = resultData.getData();
                 Log.d(LOG_TAG, String.valueOf(imageUri));
                 if (imageUri != null) {
-                    showImage(imageUri);
+                    //showImage(imageUri);
+                    uploadAndShowImage(imageUri);
                 }
             }
         }
     }
 
+    private void uploadAndShowImage(Uri imageUri) {
+        showLoading();
+        mViewModel.uploadImage(imageUri).observe(this, uriDataResponse -> {
+            if (uriDataResponse != null) {
+                hideLoading();
+                if (uriDataResponse.isSuccessful()) {
+                    showImage(uriDataResponse.getData());
+                } else {
+                    showMessage(uriDataResponse.getException().getMessage());
+                }
+            }
+        });
+    }
+
     private void showImage(Uri imageUri) {
+        // TODO: 3/9/19 save imageUrl in onSaveInstanceState
+        // todo: show loading image as image placeholder
         Glide.with(this).load(imageUri).centerCrop().into(mImgPerson);
+        mImageUri = imageUri;
         mTvImage.setVisibility(View.GONE);
     }
 
@@ -146,11 +164,12 @@ public class ProfileAddFragment extends Fragment {
 
             Profile profile = new Profile(null,
                     mTxtName.getText().toString().trim(),
-                    age, gender, null,
+                    age, gender, mImageUri != null ? mImageUri.toString() : null,
                     mTxtHobbies.getText().toString().trim()
             );
             showLoading();
-            mViewModel.saveProfile(profile).observe(this, result -> {
+
+            mViewModel.insertProfile(profile).observe(this, result -> {
                 if (result != null) {
                     hideLoading();
                     if (result) {
@@ -165,13 +184,6 @@ public class ProfileAddFragment extends Fragment {
         }
     }
 
-    private void showLoading() {
-        //todo loading
-    }
-
-    private void hideLoading() {
-        //todo loading
-    }
 
     private boolean checkFilled() {
         if (mTxtName.getText().toString().trim().isEmpty()) {
@@ -200,9 +212,5 @@ public class ProfileAddFragment extends Fragment {
         return true;
     }
 
-    private void showMessage(String message) {
-        // TODO: 3/7/19 make snackbar
-        Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
-    }
 
 }

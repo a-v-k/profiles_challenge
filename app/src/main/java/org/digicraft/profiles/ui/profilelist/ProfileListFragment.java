@@ -37,6 +37,7 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     private ProfileListAdapter mProfileListAdapter;
 
     // TODO: 3/7/19 correct icon on FAB
+    // TODO: 3/7/19 change colors
 
     public static ProfileListFragment newInstance() {
         return new ProfileListFragment();

@@ -1,14 +1,18 @@
 package org.digicraft.profiles.data.viewmodel;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import org.digicraft.profiles.data.db.ImageRemoteDataSource;
 import org.digicraft.profiles.data.db.ProfileRemoteDataSource;
 import org.digicraft.profiles.data.model.Profile;
+import org.digicraft.profiles.util.DataResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.MainThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -58,12 +62,17 @@ public class ProfileListViewModel extends ViewModel {
         mProfileListLiveData.addSource(mProfileListSourceLiveData, profileList -> mProfileListLiveData.postValue(profileList));
     }
 
-    public LiveData<Boolean> saveProfile(final Profile profile) {
-        if (profile.getFbId() == null || profile.getFbId().isEmpty()) {
-            return getProfileRemoteDataSource().insertProfile(profile);
-        } else {
-            return getProfileRemoteDataSource().updateProfile(profile);
-        }
+    public LiveData<DataResponse<Uri>> uploadImage(Uri localUri) {
+        ImageRemoteDataSource irds = new ImageRemoteDataSource();
+        return irds.saveNewImage(localUri);
+    }
+
+    public LiveData<Boolean> insertProfile(final Profile profile) {
+        return getProfileRemoteDataSource().insertProfile(profile);
+    }
+
+    public LiveData<Boolean> updateProfile(final Profile profile) {
+        return getProfileRemoteDataSource().updateProfile(profile);
     }
 
     public LiveData<Boolean> deleteProfile(Profile profile) {
@@ -74,8 +83,12 @@ public class ProfileListViewModel extends ViewModel {
         }
     }
 
+    @MainThread
     public void setCurrentProfileId(Integer profileId) {
-        mProfileIdLiveData.postValue(profileId);
+        if (mSingleProfileLiveData != null) {
+            mSingleProfileLiveData.setValue(null);
+        }
+        mProfileIdLiveData.setValue(profileId);
     }
 
     public MediatorLiveData<Profile> getSingleProfileLiveData() {

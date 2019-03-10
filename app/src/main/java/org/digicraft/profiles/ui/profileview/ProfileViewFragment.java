@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import org.digicraft.profiles.R;
 import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.viewmodel.ProfileListViewModel;
+import org.digicraft.profiles.ui.base.BaseFragment;
 
 import java.util.Objects;
 
@@ -22,13 +25,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 /**
  * Created by Andrey Koryazhkin on 07-03-2019.
  */
-public class ProfileViewFragment extends Fragment {
+public class ProfileViewFragment extends BaseFragment {
 
     private static final String ARG_PROFILE_ID = "arg_profile_id";
     private Integer mProfileId = null;
@@ -39,6 +41,8 @@ public class ProfileViewFragment extends Fragment {
     private EditText mTxtHobbies;
     private TextView mTxtGender;
     private Button mBtnSave;
+    private ImageView mImgPerson;
+    private TextView mTvImage;
 
     public static ProfileViewFragment newInstance(Integer profileId) {
         ProfileViewFragment profileViewFragment = new ProfileViewFragment();
@@ -62,8 +66,10 @@ public class ProfileViewFragment extends Fragment {
         mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
         mViewModel.setCurrentProfileId(mProfileId);
         mViewModel.getSingleProfileLiveData().observe(this, profile -> {
-            mProfile = profile;
-            fillProfile(profile);
+            if (profile != null) {
+                mProfile = profile;
+                fillProfile(profile);
+            }
         });
     }
 
@@ -77,6 +83,8 @@ public class ProfileViewFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mImgPerson = view.findViewById(R.id.img_person);
+        mTvImage = view.findViewById(R.id.tv_image_hint);
         mTxtName = view.findViewById(R.id.txt_name);
         mTxtAge = view.findViewById(R.id.txt_age);
         mTxtHobbies = view.findViewById(R.id.txt_hobbies);
@@ -113,7 +121,10 @@ public class ProfileViewFragment extends Fragment {
     }
 
     private void fillProfile(Profile profile) {
-        // TODO: 3/7/19 show image
+        if (profile.getImage() != null && !profile.getImage().isEmpty()) {
+            Glide.with(this).load(profile.getImage()).centerCrop().into(mImgPerson);
+            mTvImage.setVisibility(View.GONE);
+        }
         mTxtName.setText(profile.getName());
         mTxtAge.setText(String.valueOf(profile.getAge()));
         mTxtGender.setText(profile.getGender());
@@ -123,7 +134,7 @@ public class ProfileViewFragment extends Fragment {
     private void saveProfile() {
         mProfile.setHobbies(mTxtHobbies.getText().toString());
         showLoading();
-        mViewModel.saveProfile(mProfile).observe(this, result -> {
+        mViewModel.updateProfile(mProfile).observe(this, result -> {
             if (result != null) {
                 hideLoading();
                 if (result) {
@@ -154,22 +165,10 @@ public class ProfileViewFragment extends Fragment {
         }
     }
 
-    private void showLoading() {
-        //todo loading
-    }
-
-    private void hideLoading() {
-        //todo loading
-    }
-
     private void onBackPressed() {
         //noinspection ConstantConditions
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
-    private void showMessage(String message) {
-        // TODO: 3/7/19 make snackbar
-        Toast.makeText(this.getContext(), message, Toast.LENGTH_LONG).show();
-    }
 
 }

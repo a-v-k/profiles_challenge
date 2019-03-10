@@ -92,6 +92,7 @@ public class ProfileRemoteDataSource {
                     String id = documentReference.getId();
                     profile.setFbId(id);
                     Log.d(LOG_TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    //updateProfile(profile);
                     result.postValue(Boolean.TRUE);
                 })
                 .addOnFailureListener(e -> {
