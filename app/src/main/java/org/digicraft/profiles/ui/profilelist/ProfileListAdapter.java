@@ -50,13 +50,11 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         Profile profile = mDataset.get(position);
-        holder.tvId.setText(String.valueOf(profile.getId()));
-        holder.tvName.setText(profile.getName());
-        holder.tvAge.setText(String.valueOf(profile.getAge()));
+        holder.tvId.setText(makeIdStr(profile));
+        holder.tvName.setText(makeTitle(profile));
+        //holder.tvAge.setText(String.valueOf(profile.getAge()));
         holder.tvHobbies.setText(profile.getHobbies());
         holder.mProfile = profile;
-        // holder.imgPerson. /// todo: set image
-        //holder.container.setBackgroundColor(mContext.getColor(R.color.colorItemBackgroundFemale));
         if (GENDER_MALE.equals(profile.getGender())) {
             holder.container.setBackgroundColor(mContext.getResources().getColor(R.color.colorItemBackgroundMale));
         } else if (GENDER_FEMALE.equals(profile.getGender())) {
@@ -67,10 +65,17 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         if (profile.getImage() != null && !profile.getImage().isEmpty()) {
             Glide.with(mContext).load(profile.getImage()).centerCrop().into(holder.imgPerson);
         } else {
-            //Glide.with(mContext).load(null).into(holder.imgPerson);
             holder.imgPerson.setImageDrawable(null);
         }
 
+    }
+
+    private String makeTitle(Profile profile) {
+        return String.valueOf(profile.getName()) + ", " + String.valueOf(profile.getAge());
+    }
+
+    private String makeIdStr(Profile profile) {
+        return "ID#" + String.valueOf(profile.getId());
     }
 
     @Override
@@ -90,7 +95,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         Profile mProfile = null;
         TextView tvId;
         TextView tvName;
-        TextView tvAge;
+        //TextView tvAge;
         TextView tvHobbies;
         ImageView imgPerson;
         View container;
@@ -99,7 +104,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             super(v);
             tvId = v.findViewById(R.id.tv_id);
             tvName = v.findViewById(R.id.tv_name);
-            tvAge = v.findViewById(R.id.tv_age);
+            //tvAge = v.findViewById(R.id.tv_age);
             tvHobbies = v.findViewById(R.id.tv_hobbies);
             imgPerson = v.findViewById(R.id.img_person);
             container = v.findViewById(R.id.item_container);
