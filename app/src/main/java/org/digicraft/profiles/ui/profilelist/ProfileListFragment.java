@@ -78,6 +78,7 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRwProfileList.getContext(),
                 layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.white_separator));
         mRwProfileList.addItemDecoration(dividerItemDecoration);
         mRwProfileList.setLayoutManager(layoutManager);
         mProfileListAdapter = new ProfileListAdapter(getContext(), new ArrayList<>(), this);
