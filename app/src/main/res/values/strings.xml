@@ -17,7 +17,7 @@
     <string name="update">update</string>
     <string name="all">All</string>
     <string name="filter_title">Filter</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="action_filter">Filter</string>
     <string name="action_sort">Sort</string>
@@ -28,4 +28,5 @@
     <string name="sort_none">None</string>
     <string name="title_profile_add">Add profile</string>
     <string name="title_profile_view">Profile</string>
+    <string name="delete_confirmation">Delete profile?</string>
 </resources>

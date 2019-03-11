@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
@@ -116,7 +117,7 @@ public class ProfileViewFragment extends BaseFragment {
                 onBackPressed();
                 return true;
             case R.id.action_delete:
-                deleteProfile();
+                deleteProfileDialog();
                 return true;
         }
 
@@ -164,6 +165,15 @@ public class ProfileViewFragment extends BaseFragment {
         });
 
     }
+
+    private void deleteProfileDialog() {
+        new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                .setMessage(R.string.delete_confirmation)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> deleteProfile())
+                .setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss()).show();
+    }
+
 
     private void deleteProfile() {
         // TODO: 3/9/19 show confirmation dialog
