@@ -41,6 +41,7 @@ public class ProfileAddFragment extends BaseFragment {
 
     private static final String LOG_TAG = Const.LOG_APP + "ProfileAddFr";
     private static final int PICK_IMAGE_CODE = 22;
+    private static final String EXTRA_IMAGE_URI = "extra_image_uri";
     private ImageView mImgPerson;
     private Uri mImageUri = null;
     private EditText mTxtName;
@@ -107,6 +108,12 @@ public class ProfileAddFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(ProfileListViewModel.class);
+        if (savedInstanceState != null) {
+            mImageUri = savedInstanceState.getParcelable(EXTRA_IMAGE_URI);
+            if (mImageUri != null) {
+                showImage(mImageUri);
+            }
+        }
     }
 
     @Override
@@ -123,6 +130,14 @@ public class ProfileAddFragment extends BaseFragment {
     private void onBackPressed() {
         //noinspection ConstantConditions
         getActivity().getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageUri != null) {
+            outState.putParcelable(EXTRA_IMAGE_URI, mImageUri);
+        }
     }
 
     private void onImageClicked(@SuppressWarnings("unused") View view) {

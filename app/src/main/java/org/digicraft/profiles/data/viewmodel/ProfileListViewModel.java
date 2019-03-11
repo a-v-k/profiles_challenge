@@ -117,7 +117,9 @@ public class ProfileListViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        mWorkerHandlerThread.quit();
+        if (mWorkerHandlerThread != null && mWorkerHandlerThread.isAlive()) {
+            mWorkerHandlerThread.quit();
+        }
     }
 
     public int getFilterType() {
