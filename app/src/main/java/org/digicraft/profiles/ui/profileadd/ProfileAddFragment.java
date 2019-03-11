@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +26,6 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -62,23 +59,16 @@ public class ProfileAddFragment extends BaseFragment {
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_add_fragment, container, false);
 
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle(R.string.title_profile_add);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
         mImgPerson = view.findViewById(R.id.img_person);
         mTvImage = view.findViewById(R.id.tv_image_hint);
         mTxtName = view.findViewById(R.id.txt_name);
@@ -96,12 +86,6 @@ public class ProfileAddFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTxtName.requestFocus();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
     }
 
     @Override

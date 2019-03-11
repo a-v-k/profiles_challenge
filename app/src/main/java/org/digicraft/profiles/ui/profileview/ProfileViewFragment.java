@@ -3,8 +3,6 @@ package org.digicraft.profiles.ui.profileview;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -58,7 +55,6 @@ public class ProfileViewFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
         if (getArguments() != null) {
             mProfileId = getArguments().getInt(ARG_PROFILE_ID, Integer.MIN_VALUE);
@@ -82,11 +78,11 @@ public class ProfileViewFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.profile_view_fragment, container, false);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         toolbar.setTitle(R.string.title_profile_view);
+        toolbar.inflateMenu(R.menu.menu_profile_view);
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
         mImgPerson = view.findViewById(R.id.img_person);
         mTvImage = view.findViewById(R.id.tv_image_hint);
         mTxtName = view.findViewById(R.id.txt_name);
@@ -96,18 +92,6 @@ public class ProfileViewFragment extends BaseFragment {
         mBtnSave = view.findViewById(R.id.btn_save); // todo: make the menu instead of button
         mBtnSave.setOnClickListener(v -> saveProfile());
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_profile_view, menu);
     }
 
     @Override

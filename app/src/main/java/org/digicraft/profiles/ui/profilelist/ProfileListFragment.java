@@ -2,8 +2,6 @@ package org.digicraft.profiles.ui.profilelist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -44,7 +41,6 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
         //noinspection ConstantConditions
         mViewModel = ViewModelProviders.of(getActivity()).get(ProfileListViewModel.class);
@@ -64,8 +60,9 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_list_fragment, container, false);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        //noinspection ConstantConditions
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
+        toolbar.inflateMenu(R.menu.menu_profile_list);
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(view1 -> showProfileAddFragment());
@@ -84,12 +81,6 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
 
         return view;
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile_list, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
