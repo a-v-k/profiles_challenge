@@ -77,6 +77,7 @@ public class ProfileAddFragment extends BaseFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle(R.string.title_profile_add);
         mImgPerson = view.findViewById(R.id.img_person);
         mTvImage = view.findViewById(R.id.tv_image_hint);
         mTxtName = view.findViewById(R.id.txt_name);

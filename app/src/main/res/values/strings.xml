@@ -26,4 +26,6 @@
     <string name="sort_age_asc"><![CDATA[Age (0->9)]]></string>
     <string name="sort_age_desc"><![CDATA[Age (9->0)]]></string>
     <string name="sort_none">None</string>
+    <string name="title_profile_add">Add profile</string>
+    <string name="title_profile_view">Profile</string>
 </resources>
