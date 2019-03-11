@@ -11,7 +11,6 @@ import org.digicraft.profiles.data.model.Profile;
 import org.digicraft.profiles.data.model.SortType;
 import org.digicraft.profiles.util.DataResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.MainThread;
@@ -113,19 +112,6 @@ public class ProfileListViewModel extends ViewModel {
             mSingleProfileSourceLiveData = getProfileRemoteDataSource().getProfile(profileId);
             mSingleProfileLiveData.addSource(mSingleProfileSourceLiveData, profile -> mSingleProfileLiveData.postValue(profile));
         }
-    }
-
-    // TODO: 3/3/19 remove it
-
-    public void fillDummyData() {
-
-        List<Profile> list = new ArrayList<>();
-        list.add(new Profile(
-                2343, "John Smith", 38, Profile.GENDER_MALE, null, "Golf, Fishing"));
-        list.add(new Profile(
-                34343, "Hanna Johnson", 32, Profile.GENDER_FEMALE, null, "Jogging"));
-
-        mProfileListLiveData.postValue(list);
     }
 
     @Override

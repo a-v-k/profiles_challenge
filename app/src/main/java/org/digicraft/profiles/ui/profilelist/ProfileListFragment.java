@@ -36,9 +36,6 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     private RecyclerView mRwProfileList;
     private ProfileListAdapter mProfileListAdapter;
 
-    // TODO: 3/7/19 correct icon on FAB
-    // TODO: 3/7/19 change colors
-
     public static ProfileListFragment newInstance() {
         return new ProfileListFragment();
     }
@@ -98,7 +95,6 @@ public class ProfileListFragment extends Fragment implements ProfileListAdapter.
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        // TODO: 3/10/19 make icons for filter and sort
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
