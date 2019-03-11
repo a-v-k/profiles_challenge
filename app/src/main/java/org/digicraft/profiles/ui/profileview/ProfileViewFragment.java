@@ -1,5 +1,6 @@
 package org.digicraft.profiles.ui.profileview;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -127,9 +128,24 @@ public class ProfileViewFragment extends BaseFragment {
             mTvImage.setVisibility(View.GONE);
         }
         mTxtName.setText(profile.getName());
-        mTxtAge.setText(String.valueOf(profile.getAge()));
-        mTxtGender.setText(profile.getGender());
+        mTxtAge.setText(makeAgeString(profile));
+        mTxtGender.setText(makeGenderString(profile));
         mTxtHobbies.setText(profile.getHobbies());
+    }
+
+    private String makeAgeString(Profile profile) {
+        return Objects.requireNonNull(getContext()).getString(R.string.age_dots, profile.getAge());
+    }
+
+    private String makeGenderString(Profile profile) {
+        Context context = Objects.requireNonNull(getContext());
+        String gender = "";
+        if (Profile.GENDER_MALE.equals(profile.getGender())) {
+            gender = context.getString(R.string.male);
+        } else {
+            gender = context.getString(R.string.female);
+        }
+        return context.getString(R.string.gender_dots, gender);
     }
 
     private void saveProfile() {
