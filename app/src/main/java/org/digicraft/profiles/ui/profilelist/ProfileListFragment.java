@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ProfileListFragment extends Fragment implements ProfileListAdapter.OnItemClickListener {
 
     private ProfileListViewModel mViewModel;
+    @SuppressWarnings("FieldCanBeLocal")
     private RecyclerView mRwProfileList;
     private ProfileListAdapter mProfileListAdapter;
 

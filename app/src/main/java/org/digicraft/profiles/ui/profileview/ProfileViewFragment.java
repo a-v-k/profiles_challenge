@@ -141,7 +141,7 @@ public class ProfileViewFragment extends BaseFragment {
 
     private String makeGenderString(Profile profile) {
         Context context = Objects.requireNonNull(getContext());
-        String gender = "";
+        String gender;
         if (Profile.GENDER_MALE.equals(profile.getGender())) {
             gender = context.getString(R.string.male);
         } else {
