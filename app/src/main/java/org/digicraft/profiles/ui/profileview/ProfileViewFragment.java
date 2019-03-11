@@ -85,6 +85,7 @@ public class ProfileViewFragment extends BaseFragment {
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
         mImgPerson = view.findViewById(R.id.img_person);
         mTvImage = view.findViewById(R.id.tv_image_hint);
+        mTvImage.setVisibility(View.GONE);
         mTxtName = view.findViewById(R.id.txt_name);
         mTxtAge = view.findViewById(R.id.txt_age);
         mTxtHobbies = view.findViewById(R.id.txt_hobbies);
@@ -112,6 +113,9 @@ public class ProfileViewFragment extends BaseFragment {
         if (profile.getImage() != null && !profile.getImage().isEmpty()) {
             Glide.with(this).load(profile.getImage()).centerCrop().into(mImgPerson);
             mTvImage.setVisibility(View.GONE);
+        } else {
+            mTvImage.setText(R.string.no_image);
+            mTvImage.setVisibility(View.VISIBLE);
         }
         mTxtName.setText(profile.getName());
         mTxtAge.setText(makeAgeString(profile));

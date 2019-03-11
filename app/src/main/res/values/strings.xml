@@ -29,4 +29,5 @@
     <string name="title_profile_add">Add profile</string>
     <string name="title_profile_view">Profile</string>
     <string name="delete_confirmation">Delete profile?</string>
+    <string name="no_image">No image</string>
 </resources>
